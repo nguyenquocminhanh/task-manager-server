@@ -43,8 +43,7 @@ exports.getAllTasks = async (req, res) => {
         return res.status(200).json({tasks: allTasks});
     } catch (error) {
         console.log(err);
-        console.error(err);
-        return res.status(500).json({error: error});
+        return res.status(500).json({error: 'Something  wrong'});
     }
 }
 
@@ -74,8 +73,7 @@ exports.deleteTask = async (req, res) => {
         const result = await pool.query(query);
         res.status(204).json({message: `Deleted ${result} row(s) successfully`}); // No Content
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({error: 'Something went wrong'});
+        return res.status(500).json({error: error});
     }
 }
 
