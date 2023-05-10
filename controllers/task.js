@@ -68,12 +68,18 @@ exports.deleteTask = async (req, res) => {
         text: 'DELETE FROM public."Tasks" WHERE id = $1',
         values: [taskId],
     };
+    let client;
     
     try {
+        client = await pool.connect();
         const result = await pool.query(query);
         res.status(204).json({message: `Deleted ${result} row(s) successfully`}); // No Content
     } catch (error) {
         return res.status(500).json({error: error});
+    } finally {
+        if (client) {
+            client.release();
+        }
     }
 }
 
