@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 ////////////////////////////
 
-app.use('/api/auth', auth);
+// app.use('/api/auth', auth);
 app.use('/api/tasks', task);
 
 // create table into database
