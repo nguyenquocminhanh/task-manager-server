@@ -1,4 +1,13 @@
 const Task = require('../models/Task');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  user: process.env.USERNAME,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT, // your db port
+});
 
 exports.createTask = async (req, res) => {
     try {
