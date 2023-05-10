@@ -12,7 +12,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 ////////////////////////////
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}
+
+app.use(cors(corsOptions));
 app.use('/api/auth', auth);
 app.use('/api/tasks', task);
 
