@@ -19,12 +19,12 @@ app.use('/api/tasks', task);
 
 // create table into database
 // Sync all defined models to the database
-sequelize.sync().then(() => {
-    console.log('All models were synchronized successfully.');
-})
-.catch((err) => {
-    console.error('An error occurred while synchronizing the models:', err);
-});  
+// sequelize.sync().then(() => {
+//     console.log('All models were synchronized successfully.');
+// })
+// .catch((err) => {
+//     console.error('An error occurred while synchronizing the models:', err);
+// });  
   
 const port = 3001;
 

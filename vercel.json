@@ -3,15 +3,17 @@
     "builds": [
       {
         "src": "app.js",
-     
-        "use": "@now/node"
+        "use": "@vercel/node"
       }
     ],
     "routes": [
         {
-         
             "src": "/(.*)",
             "dest": "app.js"
         }
-      ]
+    ],
+    "env": {
+        "DATABASE_URL": "postgres://postgres:Minhanh1309@database-2-instance-1.c7xftc1i4xzo.us-east-1.rds.amazonaws.com:5432/task_manager"
+    }
+    
 }
