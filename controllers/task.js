@@ -44,7 +44,7 @@ exports.getAllTasks = async (req, res) => {
     } catch (error) {
         console.log(err);
         console.error(err);
-        return res.status(500).json({error: 'Something  wrong'});
+        return res.status(500).json({error: error});
     }
 }
 
