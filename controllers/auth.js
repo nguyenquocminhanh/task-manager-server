@@ -29,7 +29,7 @@ exports.signup = async (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: '30m',
+            expiresIn: '6h',
         });
 
         res.status(200).json({ token })
@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: '30m',
+            expiresIn: '6h',
         });
         res.status(200).json({user, token});
     } catch (error) {
