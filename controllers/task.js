@@ -24,12 +24,12 @@ exports.createTask = async (req, res) => {
         })
 
         return res.status(201).json({ 
-            message: 'success',
+            message: 'Task created successfully',
             task: task
          })
     } catch (err) {  
         console.log(err);
-        res.status(500).json({error: err});
+        return res.status(500).json('Something went wrong');
     }
 }
 
@@ -42,7 +42,7 @@ exports.getAllTasks = async (req, res) => {
         return res.status(200).json({tasks: allTasks});
     } catch (error) {
         console.log(err);
-        return res.status(500).json({error: error});
+        return res.status(500).json('Something went wrong');
     }
 }
 
@@ -52,11 +52,11 @@ exports.getOneTask = async (req, res) => {
         const task = await Task.findOne({ where: { id: taskId } });
 
         if(!task) {
-            return res.status(404).json({error: 'Task not found'})
+            return res.status(404).json('Task not found')
         } return res.status(200).json({task: task});
     } catch (error) {
         console.log(error);
-        return res.status(500).json({error: error});
+        return res.status(500).json('Something went wrong');
     }
 }
 
@@ -66,14 +66,14 @@ exports.deleteTask = async (req, res) => {
     const task = await Task.findOne({ where: { id: taskId } });
 
     if (!task) {
-        return res.status(500).json({error: 'Task not found!'});
+        return res.status(500).json('Task not found!');
     }
 
     try {
         await task.destroy();
-        res.status(204).json({message: `Deleted successfully`});
+        return res.status(200).json({message: `Deleted task successfully`});
     } catch (error) {
-        return res.status(500).json({error: error});
+        return res.status(500).json('Something went wrong');
     }
 }
 
@@ -85,17 +85,17 @@ exports.updateTask = async (req, res) => {
     const task = await Task.findOne({ where: { id: taskId } });
 
     if (!task) {
-        return res.status(500).json({error: 'Task not found!'});
+        return res.status(500).json('Task not found!');
     }
 
     if (!title) {       // update completed
         try {
             task.completed = !task.completed;
             await task.save();
-            res.status(200).json({message: `Updated task with id ${taskId} successfuilly`})
+            return res.status(200).json({message: `Updated task info successfuilly`})
         } catch (err) {
             console.log(err);
-            return res.status(500).json({error: err});
+            return res.status(500).json('Something went wrong');
         }
     } else {        // update title, description, dueDate
         try {
@@ -103,10 +103,10 @@ exports.updateTask = async (req, res) => {
             task.description = description;
             task.dueDate = dueDate;
             await task.save();
-            res.status(200).json({message: `Updated task with id ${taskId} successfuilly`});
+            return res.status(200).json({message: `Updated task status successfuilly`});
         } catch (err) {
             console.log(err);
-            return res.status(500).json({error: err});
+            return res.status(500).json('Something went wrong');
         }
     }
 }

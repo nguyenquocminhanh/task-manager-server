@@ -7,6 +7,15 @@ exports.signup = async (req, res) => {
         const { email, name, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        const existAccount = await User.findOne({ where: { email: email } });
+        if (existAccount) {
+            return res.status(401).json('Email already associated with an account');
+        }
+
+        if (password.length < 6) {
+            return res.status(401).json('Password must be at least 6 characters');
+        }
+
         const user = await User.create({
             email,
             name,
@@ -26,7 +35,7 @@ exports.signup = async (req, res) => {
         res.status(200).json({ token })
     } catch (err) {  
         console.log(err);
-        res.status(500).json({error: 'Something went wrong'});
+        return res.status(500).json('Something went wrong');
     }
 }
 
@@ -37,12 +46,12 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ where: {email} });
 
         if (!user) {
-            return res.status(401).json({error: 'Invalid credentials'});
+            return res.status(401).json('Email not exist');
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json('Invalid credentials');
         }
 
         const token = jwt.sign(
@@ -56,6 +65,6 @@ exports.login = async (req, res) => {
         res.status(200).json({user, token});
     } catch (error) {
         console.log(err);
-        res.status(500).json({error: 'Something went wrong'});
+        res.status(500).json('Something went wrong');
     }
 }
