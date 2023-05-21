@@ -83,11 +83,12 @@ io.on('connect', (socket) => {
                     attributes: ['name'], // Specify the attributes you want to include
                 },
             ],
+            order: [['createdAt', 'ASC']]
         });
 
         const allUsers = await team.getMembers();   
         
-        socket.emit('getData', { allTasks: allTasks, teamName: team.name, allUsers: allUsers, owner_id: team.owner_id, allMessages: [...allMessages].reverse() });
+        socket.emit('getData', { allTasks: allTasks, teamName: team.name, allUsers: allUsers, owner_id: team.owner_id, allMessages: allMessages });
 
         // message
         socket.on('message', async (messageData) => {
@@ -96,6 +97,8 @@ io.on('connect', (socket) => {
                 user_id: messageData.user_id,
                 team_id: messageData.team_id,
             })
+
+            console.log(message);
 
             if (message) {
                 const response = await Message.findByPk(message.id, {
@@ -132,9 +135,10 @@ io.on('connect', (socket) => {
                         attributes: ['name'], // Specify the attributes you want to include
                     },
                 ],
+                order: [['createdAt', 'ASC']]
             });
 
-            io.to(teamId).emit('messages after delete', [...allMessages].reverse());
+            io.to(teamId).emit('messages after delete', allMessages);
         })
     });
 
