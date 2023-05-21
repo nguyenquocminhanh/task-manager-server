@@ -14,7 +14,7 @@
   
       {
           "src": "/(.*)",
-          "dest": "app.js"
+          "dest": "/app.js"
       }
     ]    
 }
