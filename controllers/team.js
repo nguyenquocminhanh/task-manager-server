@@ -73,6 +73,7 @@ exports.getAllTeams = async (req, res) => {
 };
 
 exports.joinTeam = async (req, res) => {
+    const { io } = require('../app');
     try {
         const user_id = req.user.userId;
 
@@ -110,6 +111,20 @@ exports.joinTeam = async (req, res) => {
         }
 
         await TeamMembership.create({ user_id, team_id });
+        // send io
+        const teamId = team.id;
+        const user = await User.findByPk(user_id);
+
+        const message = await Message.create({
+            content: `${user.name} just joined! Welcome!`,
+            user_id: user_id,
+            team_id: teamId,
+            isnotification: true
+        });
+
+        // send message back to client-side
+        io.to(teamId).emit('messageResponse', message);
+
         return res.status(200).json({ message: 'Joined team successfully', team: team });
     } catch (error) {
         console.log(error);
@@ -150,11 +165,25 @@ exports.deleteTeam = async (req, res) => {
 }
 
 exports.leaveTeam = async (req, res) => {
+    const { io } = require('../app');
     const teamId = req.params.teamId; 
     const user_id = req.user.userId;
 
     try {
         await TeamMembership.destroy({ where: { user_id: user_id, team_id: teamId } });
+
+        // send io
+        const user = await User.findByPk(user_id);
+ 
+        const message = await Message.create({
+            content: `${user.name} left team!`,
+            user_id: user_id,
+            team_id: teamId,
+            isnotification: true
+        });
+ 
+         // send message back to client-side
+         io.to(teamId).emit('messageResponse', message);
       
         return res.status(200).json({message: `Leave team successfully`});
     } catch (error) {
@@ -209,10 +238,24 @@ exports.getAllMembersByTeam = async (req, res) => {
 
 
 exports.askToLeaveTeam = async (req, res) => {
+    const { io } = require('../app');
     const teamId = req.query.teamId;
     const memberId = req.query.userId;
     try {
         await TeamMembership.destroy({ where: { user_id: memberId, team_id: teamId } });
+
+        // send io
+        const user = await User.findByPk(memberId);
+ 
+        const message = await Message.create({
+            content: `${user.name} left team!`,
+            user_id: memberId,
+            team_id: teamId,
+            isnotification: true
+        });
+ 
+         // send message back to client-side
+         io.to(teamId).emit('messageResponse', message);
         
         return res.status(200).json({message: `Ask to leave team successfully`});
     } catch (error) {

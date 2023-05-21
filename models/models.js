@@ -142,6 +142,11 @@ const Message = sequelize.define('Message', {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
+    },
+
+    isnotification: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
     }
 });
 
