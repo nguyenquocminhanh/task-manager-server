@@ -15,9 +15,11 @@ const server = http.createServer(app);
 
 // WebSocket
 const io = require("socket.io")(server, {
-    allowRequest: (req, callback) => {
-      const noOriginHeader = req.headers.origin === undefined;
-      callback(null, noOriginHeader);
+    cors: {
+        origin: process.env.CLIENT_APP_URL,
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
     }
 });
 
