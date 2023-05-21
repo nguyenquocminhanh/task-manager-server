@@ -15,11 +15,9 @@ const server = http.createServer(app);
 
 // WebSocket
 const io = require("socket.io")(server, {
-    cors: {
-        origin: 'https://task-manager-lyart-pi.vercel.app', // Replace with the appropriate origin URL of your React app
-        methods: ['GET', 'POST'], // Specify the allowed HTTP methods
-        allowedHeaders: ['Authorization'], // Specify the allowed headers
-        credentials: true // Enable credentials (if required)
+    allowRequest: (req, callback) => {
+      const noOriginHeader = req.headers.origin === undefined;
+      callback(null, noOriginHeader);
     }
 });
 
