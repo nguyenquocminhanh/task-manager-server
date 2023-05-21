@@ -57,6 +57,11 @@ exports.getAllTeams = async (req, res) => {
                     as: 'owner',
                     attributes: ['name'], // Specify the attributes you want to include
                 },
+                {
+                    model: User,
+                    as: 'members',
+                    through: { attributes: [] }, // Exclude any additional attributes from the join table
+                },
             ],
         });
 
@@ -105,7 +110,7 @@ exports.joinTeam = async (req, res) => {
         }
 
         await TeamMembership.create({ user_id, team_id });
-        return res.status(200).json({ message: 'User joined the team successfully', team: team });
+        return res.status(200).json({ message: 'Joined team successfully', team: team });
     } catch (error) {
         console.log(error);
         return res.status(500).json('Something went wrong');
@@ -198,6 +203,50 @@ exports.getAllMembersByTeam = async (req, res) => {
         return res.status(200).json({ members: allMembers });
     } catch (error) {
         console.log(error);
+        return res.status(500).json('Something went wrong');
+    }
+};
+
+
+exports.askToLeaveTeam = async (req, res) => {
+    const teamId = req.query.teamId;
+    const memberId = req.query.userId;
+    try {
+        await TeamMembership.destroy({ where: { user_id: memberId, team_id: teamId } });
+        
+        return res.status(200).json({message: `Ask to leave team successfully`});
+    } catch (error) {
+        return res.status(500).json('Something went wrong');
+    }
+};
+
+exports.updatePasswordTeam = async (req, res) => {
+    try {
+        const { teamId, oldPassword, newPassword  } = req.body;
+
+        const team = await Team.findByPk(teamId);
+
+        if (!team) {
+            return res.status(404).json('Team not found!');
+        }
+
+        const isPasswordValid = await bcrypt.compare(oldPassword, team.password);
+        if (!isPasswordValid) {
+            return res.status(401).json('Invalid old password');
+        }
+
+        const isPasswordSame = await bcrypt.compare(newPassword, team.password);
+        if (isPasswordSame) {
+            return res.status(401).json('You cannot re-use old password');
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        team.password = hashedPassword;
+        await team.save();
+
+        return res.status(201).json({message: `Updated team password successfully`});
+    } catch (error) {
         return res.status(500).json('Something went wrong');
     }
 };
