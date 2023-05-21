@@ -98,8 +98,6 @@ io.on('connect', (socket) => {
                 team_id: messageData.team_id,
             })
 
-            console.log(message);
-
             if (message) {
                 const response = await Message.findByPk(message.id, {
                     include: [
