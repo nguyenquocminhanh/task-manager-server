@@ -21,7 +21,6 @@ const io = require("socket.io")(server, {
         methods: ["GET", "POST"],
         credentials: true
     },
-    allowEIO3: true
 });
 
 io.use(middleware.authenticateSocket);
