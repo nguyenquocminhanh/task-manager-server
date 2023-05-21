@@ -3,10 +3,10 @@ var router = express.Router();
 var taskControllers = require('../controllers/task');
 var middleware = require('../utils/middleware');
 
-router.get('/:taskId', middleware, taskControllers.getOneTask);
-router.get('', middleware, taskControllers.getAllTasks);
-router.post('', middleware, taskControllers.createTask);
-router.put('/:taskId', middleware, taskControllers.updateTask);
-router.delete('/:taskId', middleware, taskControllers.deleteTask);
+router.get('/:taskId', middleware.authenticateToken, taskControllers.getOneTask);
+router.get('', middleware.authenticateToken, taskControllers.getAllTasks);
+router.post('', middleware.authenticateToken, taskControllers.createTask);
+router.put('/:taskId', middleware.authenticateToken, taskControllers.updateTask);
+router.delete('/:taskId', middleware.authenticateToken, taskControllers.deleteTask);
 
 module.exports = router;
