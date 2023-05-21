@@ -173,7 +173,7 @@ sequelize.sync().then(() => {
     console.error('An error occurred while synchronizing the models:', err);
 });  
   
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 server.listen(port, () => {
     console.log(`Server started on port ${port}`);
