@@ -15,12 +15,12 @@ const server = http.createServer(app);
 
 // WebSocket
 const io = require("socket.io")(server, {
+    transports: ['polling'],
     cors: {
         origin: process.env.CLIENT_APP_URL,
         methods: ["GET", "POST"],
         credentials: true
     },
-    transports: ['websocket'],
     allowEIO3: true
 });
 
