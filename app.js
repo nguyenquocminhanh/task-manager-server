@@ -15,7 +15,7 @@ const server = http.createServer(app);
 
 // WebSocket
 const io = require("socket.io")(server, {
-    transports: ['polling'],
+    transports: ['websocket'],
     cors: {
         origin: process.env.CLIENT_APP_URL,
         methods: ["GET", "POST"],
